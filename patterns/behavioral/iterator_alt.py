@@ -6,44 +6,49 @@ Traverses a container and accesses the container's elements.
 """
 
 
-class NumberWords:
-    """Counts by word numbers, up to a maximum of five"""
+from __future__ import annotations
 
-    _WORD_MAP = (
+from typing import Tuple
+from copy import deepcopy
+
+
+class NumberWords:
+    _WORD_MAP: Tuple[str, ...] = (
         "one",
         "two",
         "three",
         "four",
-        "five",
+        "five"
     )
 
-    def __init__(self, start, stop):
-        self.start = start
+    def __init__(self, start: int, stop: int) -> None:
+        self.index = start
         self.stop = stop
 
-    def __iter__(self):  # this makes the class an Iterable
-        return self
+    def __iter__(self) -> NumberWords:   # makes the class an Iterable
+        return deepcopy(self)
 
-    def __next__(self):  # this makes the class an Iterator
-        if self.start > self.stop or self.start > len(self._WORD_MAP):
+    def __next__(self) -> str:   # makes the class an Iterator
+        if self.index > self.stop or self.index > len(self._WORD_MAP):
             raise StopIteration
-        current = self.start
-        self.start += 1
-        return self._WORD_MAP[current - 1]
 
+        item = self._WORD_MAP[self.index - 1]
+        self.index += 1
 
-# Test the iterator
+        return item
 
 
 def main():
     """
-    # Counting to two...
-    >>> for number in NumberWords(start=1, stop=2):
+    >>> numObj = NumberWords(start=1, stop=2)
+    >>> for number in numObj:
     ...     print(number)
     one
     two
-
-    # Counting to five...
+    >>> for number in numObj:
+    ...     print(number)
+    one
+    two
     >>> for number in NumberWords(start=1, stop=5):
     ...     print(number)
     one
